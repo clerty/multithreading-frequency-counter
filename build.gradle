@@ -1,0 +1,57 @@
+plugins {
+    id "java"
+    id "idea"
+}
+
+ext {
+    fingBugsVersion = "3.0.2"
+    commonsLangVersion = "3.11"
+    logbackVersion = "1.2.3"
+    junitVersion = "5.7.0"
+    mockitoVersion = "3.5.11"
+}
+
+sourceCompatibility = 11
+targetCompatibility = 11
+
+idea {
+    module {
+        downloadJavadoc = true
+        downloadSources = true
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.projectlombok:lombok:1.18.18'
+    annotationProcessor 'org.projectlombok:lombok:1.18.18'
+    compileOnly "com.google.code.findbugs:jsr305:$fingBugsVersion"
+    implementation "org.apache.commons:commons-lang3:$commonsLangVersion"
+    implementation group: 'com.google.guava', name: 'guava', version: '31.1-jre'
+
+    implementation "ch.qos.logback:logback-classic:$logbackVersion"
+
+    testImplementation "org.junit.jupiter:junit-jupiter-api:$junitVersion"
+    testImplementation "org.junit.jupiter:junit-jupiter-engine:$junitVersion"
+    testImplementation "org.junit.jupiter:junit-jupiter-params:$junitVersion"
+    testImplementation "org.mockito:mockito-junit-jupiter:$mockitoVersion"
+    testImplementation group: 'org.assertj', name: 'assertj-core', version: '3.22.0'
+
+}
+
+test {
+    useJUnitPlatform()
+}
+
+jar {
+    archiveFileName = "${project.name}.jar"
+    manifest {
+        attributes "Main-Class": "ru.digitalhabbits.homework2.Homework"
+    }
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+}
